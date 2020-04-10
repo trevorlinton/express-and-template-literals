@@ -1,0 +1,42 @@
+module.exports = (req, data) => `
+${require('./header.html')(req, data)}
+  <style>
+    .done {
+      text-decoration: line-through;
+    }
+  </style>
+  <h1>Todo</h1>
+  <table>
+    ${data.todo.map((item) => `
+    <tr>
+      <td class="${item.finished ? 'done' : ''}">
+        ${item.created.toLocaleString()}
+      </td>
+      <td class="${item.finished ? 'done' : ''}">
+        ${item.description}
+      </td>
+      <td>
+        ${item.finished === null ? `
+        <form method="post" action="/tasks/${item.id}/done">
+          <button type="submit">Done</button>
+        </form>
+        ` : ``}
+      </td>
+    </tr>
+    `).join('')}
+  </table>
+  <dialog open>
+    <form method="post" action="/tasks">
+      <label for="description">Description</label>
+      <input 
+        type="text" 
+        required 
+        title="Enter a description to continue" 
+        maxlength="1024" 
+        name="description" 
+        id="description" />
+      <button type="submit">Add</button>
+    </form>
+  </dialog>
+${require('./footer.html')(req, data)}
+`;
